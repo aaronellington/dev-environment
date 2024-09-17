@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+NODE_VERSION=${1-"20.17.0"}
+
+TARGET_OS="$(uname)"
+case "$TARGET_OS" in
+    "Linux")
+        TARGET_OS="linux"
+        ;;
+    "Darwin")
+        TARGET_OS="darwin"
+        ;;
+esac
+
+TARGET_TYPE="$(uname -m)"
+case "$TARGET_TYPE" in
+    "x86_64")
+        TARGET_TYPE="amd64"
+        ;;
+    "aarch64")
+        TARGET_TYPE="arm64"
+        ;;
+esac
+
+TARGET_FILE="/tmp/node.tar.gz"
+TARGET_URL="https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-$TARGET_OS-$TARGET_TYPE.tar.xz"
+
+# If Node is installed, check if we are already on the correct version
+if command -v node &> /dev/null; then
+    EXISTING_VERSION=$(node -v | grep -Po "[\d.]+.[\d.]+")
+    if [ $NODE_VERSION = $EXISTING_VERSION ] ;then
+        exit 0
+    fi
+fi
+
+echo "Downloading: $TARGET_URL"
+
+# Download new copy
+curl -Ls $TARGET_URL --output $TARGET_FILE
+# Remove old copy
+rm -rf $HOME/.local/node
+# Extract new copy
+mkdir -p $HOME/.local/node
+tar -C $HOME/.local/node --strip-components 1 -xf $TARGET_FILE
+# Clean up
+rm $TARGET_FILE

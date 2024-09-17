@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeuox pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
+APT_PACKAGES=(
+	# Required Utilities
+	build-essential
+	ca-certificates
+	curl
+	fish
+	git
+	ssh
+	# Language Support
+	golang
+	nodejs
+	php-cli
+	# Optional Utilities
+	nmap
+	jq
+)
+
+apt-get update
+apt-get -y install --no-install-recommends "${APT_PACKAGES[@]}"
+apt-get clean
+
+chsh -s /usr/bin/fish

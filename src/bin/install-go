@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+GO_VERSION=${1-"1.23.1"}
+
+TARGET_TYPE="$(uname -m)"
+case "$TARGET_TYPE" in
+    "x86_64")
+        TARGET_TYPE="amd64"
+        ;;
+    "aarch64")
+        TARGET_TYPE="arm64"
+        ;;
+esac
+
+TARGET_FILE="/tmp/go.tar.gz"
+TARGET_URL="https://dl.google.com/go/go$GO_VERSION.$(uname)-$TARGET_TYPE.tar.gz"
+
+# If Go is installed, check if we are already on the correct version
+if command -v go &> /dev/null; then
+    EXISTING_VERSION=$(go version | grep -Po "[\d.]+.[\d.]+")
+    if [ $GO_VERSION = $EXISTING_VERSION ] ;then
+        exit 0
+    fi
+fi
+
+echo "Downloading: $TARGET_URL"
+
+# Download new copy
+curl -Ls $TARGET_URL --output $TARGET_FILE
+# Remove old copy
+rm -rf $HOME/.local/go
+# Extract new copy
+tar -C $HOME/.local -xzf $TARGET_FILE
+# Clean up
+rm $TARGET_FILE
+
+# Install language dependencies
+go install golang.org/x/tools/gopls@latest
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
