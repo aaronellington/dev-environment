@@ -15,6 +15,9 @@ APT_PACKAGES=(
 	golang
 	nodejs
 	php-cli
+	lua5.4
+	liblua5.4-dev
+	luarocks
 	# Optional Utilities
 	nmap
 	jq
