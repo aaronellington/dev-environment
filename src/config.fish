@@ -7,4 +7,3 @@ source $DEV_ENV_CONFIG_DIR/fish/git.fish
 source $DEV_ENV_CONFIG_DIR/fish/go.fish
 source $DEV_ENV_CONFIG_DIR/fish/node.fish
 source $DEV_ENV_CONFIG_DIR/fish/php.fish
-source $DEV_ENV_CONFIG_DIR/fish/lua.fish
