@@ -1,5 +1,5 @@
 # Base image
-FROM mcr.microsoft.com/devcontainers/base:noble
+FROM ubuntu:noble
 
 # Initialize the system
 WORKDIR /root
