@@ -13,7 +13,7 @@ APT_PACKAGES=(
 	ssh
 	# Language Support
 	golang
-	nodejs
+	npm
 	php-cli
 	# Optional Utilities
 	nmap
